@@ -5,7 +5,7 @@ class DioHelper{
   static init(){
     dio  = Dio(
         BaseOptions(
-          baseUrl: 'https://newsapi.org/',
+          baseUrl: 'https://student.valuxapps.com/api/',
           receiveDataWhenStatusError: true,
         )
     );
@@ -16,5 +16,14 @@ class DioHelper{
   })async
   {
     return await dio!.get(url,queryParameters: query);
+  }
+  static Future<Response> postData({
+  required String url,
+    Map<String,dynamic>?query,
+    required Map<String,dynamic>data
+})async{
+    return dio!.post(url,
+    queryParameters: query,
+    data: data);
   }
 }
