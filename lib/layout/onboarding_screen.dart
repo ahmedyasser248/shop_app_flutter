@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:shop_app/shared/components.dart';
+import 'package:shop_app/shared/network/local/cache_helper.dart';
+import 'package:shop_app/shared/network/local/cache_helper.dart';
 import 'package:shop_app/shared/styles/colors.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -40,6 +42,15 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         body: 'On Board 3 Body')
 
   ];
+  void submit(){
+    CacheHelper.saveData(key: 'onBoarding',value: true).then((value){
+        if(value){
+          navigateAndFinish(context, ShopLoginScreen());
+        }
+    }).catchError((onError){
+      print(onError);
+    });
+  }
 
   var boardController = PageController();
   bool isLast =false;
@@ -48,9 +59,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     return Scaffold(
       appBar:  AppBar(
         actions: [
-          defaultTextButton(function:(){
-            navigateAndFinish(context, ShopLoginScreen());
-          } ,
+          defaultTextButton(function:submit,
               text:'skip'
 
           ),
@@ -98,7 +107,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 Spacer(),
                 FloatingActionButton(onPressed: (){
                   if(isLast){
-                    navigateAndFinish(context, ShopLoginScreen());
+                    submit();
                   }else{
                     boardController.nextPage(
                         duration: Duration(
