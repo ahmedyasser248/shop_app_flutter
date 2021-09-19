@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shop_app/layout/register_screen.dart';
 import 'package:shop_app/layout/shop_layout.dart';
 import 'package:shop_app/shared/components.dart';
+import 'package:shop_app/shared/constants.dart';
 import 'package:shop_app/shared/cubit/login/cubit_login.dart';
 import 'package:shop_app/shared/cubit/login/states_login.dart';
 import 'package:shop_app/shared/network/local/cache_helper.dart';
@@ -37,6 +38,7 @@ class ShopLoginScreen extends StatelessWidget{
               CacheHelper.saveData(key: 'token',
                   value: state.loginModel!.data!.token ).then((value)
               {
+                TOKEN = state.loginModel!.data!.token;
                 navigateAndFinish(context, ShopLayout());
               });
 
@@ -147,7 +149,9 @@ class ShopLoginScreen extends StatelessWidget{
                             Text(
                               'Don\'t have an account?',
                             ),
-                            defaultTextButton(function: (){}, text: 'register')
+                            defaultTextButton(function: (){
+                              navigateTo(context, ShopRegisterScreen());
+                            }, text: 'register')
 
                           ],
                         ),

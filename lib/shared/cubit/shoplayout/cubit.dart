@@ -113,10 +113,11 @@ class ShopCubit extends Cubit<ShopStates>{
       ).then((value){
         userModel = ShopLoginModel.fromJson(value.data);
         print(value.data.toString());
-        emit(ShopSuccessUserDataState());
+        emit(ShopSuccessUserDataState(userModel!));
       }).catchError((error){
         print(error.toString());
         emit(ShopErrorUserDataState());
       });
   }
+
 }
