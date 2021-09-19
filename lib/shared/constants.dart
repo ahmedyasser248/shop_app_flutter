@@ -8,4 +8,4 @@ void signOut(context){
     navigateAndFinish(context, ShopLoginScreen());
   });
 }
-String? token ='';
+String? TOKEN ='';

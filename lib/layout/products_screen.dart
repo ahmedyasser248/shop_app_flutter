@@ -1,9 +1,11 @@
+
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shop_app/models/categories_model.dart';
 import 'package:shop_app/models/home_model.dart';
 import 'package:shop_app/shared/cubit/shoplayout/cubit.dart';
@@ -18,20 +20,36 @@ class ProductScreen extends StatelessWidget {
           return ConditionalBuilder(
               condition: ShopCubit.get(context).homeModel != null && ShopCubit.get(context).categoriesModel != null,
               builder: (context) =>
-                  productsBuilder(ShopCubit.get(context).homeModel!,ShopCubit.get(context).categoriesModel!),
+                  productsBuilder(ShopCubit.get(context).homeModel!,ShopCubit.get(context).categoriesModel!,context),
               fallback: (context) =>
                   Center(child: CircularProgressIndicator()));
         },
-        listener: (context, state) {});
+        listener: (context, state) {
+
+          if(state is ShopSuccessChangeFavoriteState)
+          {
+            if(!state.model.status!){
+              Fluttertoast.showToast(
+                  msg: state.model.message! ,
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 5,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  fontSize: 16.0
+              );
+            }
+          }
+        });
   }
 
-  Widget productsBuilder(HomeModel model,CategoriesModel categoriesModel) => SingleChildScrollView(
+  Widget productsBuilder(HomeModel model,CategoriesModel categoriesModel,context) => SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CarouselSlider(
-              items: model.data!.banners
+              items: model.data.banners
                   .map((e) => Image(
                         image: NetworkImage('${e.image}'),
                         width: double.infinity,
@@ -106,15 +124,15 @@ class ProductScreen extends StatelessWidget {
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   children: List.generate(
-                      model.data!.products.length,
+                      model.data.products.length,
                       (index) =>
-                          buildGridProduct(model.data!.products[index]))),
+                          buildGridProduct(model.data.products[index],context))),
             )
           ],
         ),
       );
 
-  Widget buildGridProduct(ProductModel model) => Container(
+  Widget buildGridProduct(ProductModel model,context) => Container(
         color: Colors.white,
         child: Column(
           children: [
@@ -176,13 +194,16 @@ class ProductScreen extends StatelessWidget {
                       ),
                     Spacer(),
                     IconButton(
-                      padding: EdgeInsets.zero,
-                      icon:Icon(
-                        Icons.favorite_border,
-                        size: 14.0,
+                      icon:CircleAvatar(
+                        radius: 15.0,
+                        backgroundColor: ShopCubit.get(context).favorites[model.id]!?defaultColor :Colors.grey ,
+                        child: Icon(
+                          Icons.favorite_border,
+                          size: 14.0,
+                        ),
                       ) ,
                       onPressed:(){
-
+                            ShopCubit.get(context).changeFavorites(model.id);
                       }
                       ,)
                   ]),

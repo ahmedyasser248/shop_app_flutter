@@ -22,10 +22,10 @@ void main() async{
   DioHelper.init();
   await CacheHelper.init();
   bool? onBoarding = CacheHelper.getData(key: 'onBoarding');
-  token = CacheHelper.getData(key: 'token');
+  TOKEN = CacheHelper.getData(key: 'token');
   late Widget widget;
   if(onBoarding != null){
-    if(token != null) widget = ShopLayout();
+    if(TOKEN != null) widget = ShopLayout();
     else widget = ShopLoginScreen();
   }else
     {
@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
             fromShared:  isDark
         ),),
       BlocProvider(
-        create: (BuildContext context)=>ShopCubit()..getHomeData()..getCategoriesData(),
+        create: (BuildContext context)=>ShopCubit()..getHomeData()..getCategoriesData()..getFavorites()..getUserData(),
       )
     ] , child: BlocConsumer<AppCubit,States>(
       listener: (context, state){},
