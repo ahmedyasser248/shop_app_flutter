@@ -6,7 +6,7 @@
 * [Screens](#screens)
 
 ## General info
-App used to save your daily tasks.
+E-commerce project.
 	
 ## Technologies
 Project is created with:
